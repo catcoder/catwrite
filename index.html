@@ -11,6 +11,7 @@
 
 <body>
 <!--主体-->
+<form action="sendto.php" method="post">
 <div id="main">
 	<!--顶部-->
     <div class="header" id="header"></div>
@@ -47,7 +48,7 @@
         </div>        
         <div id="edit_area" class="edit_area">
         	<div class="edit_control" id="edit_control">
-            	<textarea wrap="virtual" onkeyup="wordnum()" id="edittext" class="edit_main"></textarea>
+            	<input type="hidden" id="txtid" value="edittext" />
             </div>
             <div class="edit_info">
 	            字数：<span id="editinfo" class="edit_info_span"></span></div>
@@ -55,6 +56,6 @@
         </div>
      </div>
 </div>
-<div id="fulldiv"></div>
+</form>
 </body>
 </html>

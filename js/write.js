@@ -27,6 +27,8 @@ $(document).ready(function(e) {
 	$("#title_list li").mouseleave(function(){
 		hide_edit(this);
 	});
+	
+	create_file_title("默认文件");
 });
 
 $(window).resize(function(){
@@ -37,7 +39,7 @@ function change_left_list_height(){
 	$("#l_list").css("height",$(window).height() - 48);
 	$("#edit_area").css("height",$("#l_list").height() - 65);
 	$("#edit_control").css("height",$("#edit_area").height() - 35);
-	$("#edittext").css("width",$("#edit_area").width() - 20);
+	$($("#txtid").val()).css("width",$("#edit_area").width() - 20);
 }
 
 function change_left_show(){
@@ -52,9 +54,10 @@ function change_left_show(){
 		$("#oneline").css("background","url(img/bl.png) 0px 50% no-repeat");
 		$("#r_edit").css("margin-left","225px");
 	}
-	$("#edittext").css("width",$("#edit_area").width() - 20);
+	$($("#txtid").val()).css("width",$("#edit_area").width() - 20);
 }
 
+//全屏编辑
 function fullscreen(){
 	if($("#r_edit").attr("class") == "core"){
 		$("#r_edit").removeClass("core");
@@ -65,7 +68,7 @@ function fullscreen(){
 		});
 		$("#edit_area").removeClass("edit_area");
 		$("#edit_area").addClass("edit_area_fs");
-		$("#edittext").css("width",$("#edit_area").width() - 20);
+		$($("#txtid").val()).css("width",$("#edit_area").width() - 20);
 		$("#edit_control").css("margin-top","20px");		
 		$("#header").css("display","none");
 		$("#toolbar").css("display","none");
@@ -78,7 +81,7 @@ function fullscreen(){
 		});
 		$("#edit_area").removeClass("edit_area_fs");
 		$("#edit_area").addClass("edit_area");
-		$("#edittext").css("width",$("#edit_area").width() - 20);
+		$($("#txtid").val()).css("width",$("#edit_area").width() - 20);
 		$("#edit_control").css("margin-top","0px");
 		$("#header").css("display","block");
 		$("#toolbar").css("display","block");
@@ -147,7 +150,7 @@ alert(msg);
 
 //统计字数
 function wordnum(){
-	var words = $("#edittext").val();
+	var words = $($("#txtid").val()).val();
 	var num = 0,tmp = "";
 	for(i = 0;i < words.length;i++){
 		tmp = words.charAt(i);
@@ -160,32 +163,72 @@ function wordnum(){
 }
 
 function show_word_count(){
-	$("#edittext").wordbox("#edittext");
+	$($("#txtid").val()).wordbox($("#txtid").val());
 }
 
 //快速排版
 function fast_typesetting(){
-	var content = $("#edittext").val();	
+	var content = $($("#txtid").val()).val();	
 	content = content.replace(/^\s*|([ ]{4,}|\t+)/gm,"    ");
 	content = content.replace(/^([ ]{4,}|\t+)/gm, "    ");
 	content = content.replace(/[\n\r]+/ig,"\n\n");	
-	$("#edittext").val(content).focus();
+	$($("#txtid").val()).val(content).focus();
 }
 
 function send_email(){
 }
 
 //创建标题
-function create_file_title(){
+function create_file_title(title){
 	var titlenum = $("#title_list").find("li").length;
 	titlenum++;
-	var newtitle = '<li id="list_$"><input type="text" id="txtname_$" value=""/><a title="编辑" href="javascript:void(0)" class="rename" onclick="edit_title(this)"></a></li>';
+	var newtitle = '<li id="list_$" num="$"><input type="text" id="txtname_$" value=""/><a title="编辑" href="javascript:void(0)" class="rename" onclick="edit_title(this)"></a></li>';	
+	
 	newtitle = newtitle.replace(/[$]/g, titlenum);
-	$("#title_list").append(newtitle);
-	$("#list_" + titlenum).mouseover(function(){show_edit(this);}).mouseleave(function(){hide_edit(this);});
-	$("#list_" + titlenum).find("input").focus().blur(function() {
+	$("#title_list").append(newtitle);	
+	
+	var newlist = $("#list_" + titlenum);
+	newlist.mouseover(function(){show_edit(this);}).mouseleave(function(){hide_edit(this);});
+	
+	//新创建的标题高亮
+	$("#title_list input").each(function(index) {
+        $(this).css("border-color","#333");			
+    });	
+	
+	newlist.find("input").focus().blur(function() {
         $(this).attr("disabled", "disabled");
+    }).css("border-color","#C60");
+	
+	//点击标题切换高亮和编辑区域
+	newlist.click(function(e) {
+		$("#title_list input").each(function(index) {
+            $(this).css("border-color","#333");			
+        });		
+		
+		$("#edit_control").find("textarea").each(function(index, element) {
+			$(this).css("display", "none");
+		});	
+		
+        $(this).find("input").css("border-color","#C60");
+		
+		$("#edittext_" + $(this).attr("num")).css("display", "block");
+		$("#txtid").val("#edittext_" + $(this).attr("num"));
     });
+	
+	if(title != ""){
+		newlist.find("input").val(title);
+	}
+		
+	//增加编辑区
+	var newedit = '<textarea wrap="virtual" onkeyup="wordnum()" id="edittext_$" class="edit_main"></textarea>';
+	newedit = newedit.replace("$", titlenum);
+	
+	$("#edit_control").find("textarea").each(function(index, element) {
+        $(this).css("display", "none");
+    });
+	$("#edit_control").append(newedit);	
+	$("#edittext_" + titlenum).css("width",$("#edit_area").width() - 20);
+	$("#txtid").val("#edittext_" + titlenum);
 }
 
 function show_edit(ele){
