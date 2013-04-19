@@ -247,3 +247,7 @@ function edit_title(ele){
 	$(ele).prev().attr("disabled",false).focus();
 	hide_edit($(ele).parent());
 }
+
+function aboutcat(){
+	$(this).aboutcat();
+}
