@@ -1,4 +1,8 @@
 // JavaScript Document
+window.onbeforeunload = function()
+{
+       return ('离开页面可能造成数据的丢失！');
+}
 $(document).ready(function(e) {
     change_left_list_height();
 	$("#oneline").click(function(){
@@ -92,6 +96,16 @@ function dokey(event){
 	event = event ? event : ((window.event) ? window.event : "");
 	if(event.keyCode == 27){
 		fullscreen();
+	}else if(event.keyCode == 116){
+		alert("为了防止数据丢失，本页面屏蔽了F5的刷新。");
+		event.keyCode=0;
+		event.cancelBubble = true;
+		if ( event && event.preventDefault ) 
+			event.preventDefault(); 
+		else
+			window.event.returnValue = false;
+
+		return false;
 	}else if(event.keyCode == 120){ //F9
 		//详细统计
 		if($("#sbox_main").length > 0){
@@ -105,7 +119,7 @@ function dokey(event){
 		}
 	}else if(event.keyCode == 121){  //F10快速排序
 		fast_typesetting();
-	}
+	}	
 }
 
 //另存为
