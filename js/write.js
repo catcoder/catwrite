@@ -4,6 +4,12 @@ window.onbeforeunload = function()
        return ('离开页面可能造成数据的丢失！');
 }
 $(document).ready(function(e) {
+	//判断浏览器
+	if(navigator.userAgent.toLowerCase().indexOf("chrome") <= 0){
+		alert("本系统只支持Chrome浏览器");
+		window.location = "http://catcoder.com";
+		return false;
+	}
     change_left_list_height();
 	$("#oneline").click(function(){
 		change_left_show();
@@ -32,7 +38,10 @@ $(document).ready(function(e) {
 		hide_edit(this);
 	});
 	
-	create_file_title("默认文件");
+	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; //文件系统请求标识
+	window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL;
+	
+	loadfiles();
 });
 
 $(window).resize(function(){
@@ -121,46 +130,9 @@ function dokey(event){
 		fast_typesetting();
 	}	
 }
-
-//另存为
-function saveas(){
-	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; //文件系统请求标识
-	window.requestFileSystem(window.TEMPORARY, 5*1024*1024, initFS, errorHandler);
+function sendto_sub(){
+	return false;
 }
-
-function initFS(fs){
-  fs.root.getDirectory('Documents', {create: true}, function(dirEntry) {
- 	 alert('You have just created the ' + dirEntry.name + ' directory.');
-}, errorHandler); 
-}
-
-function errorHandler(err){
-  var msg = 'An error occured: ';
-
-  switch (err.code) {
-    case FileError.NOT_FOUND_ERR:
-      msg += 'File or directory not found';
-      break;
-
-    case FileError.NOT_READABLE_ERR:
-      msg += 'File or directory not readable';
-      break;
-
-    case FileError.PATH_EXISTS_ERR:
-      msg += 'File or directory already exists';
-      break;
-
-    case FileError.TYPE_MISMATCH_ERR:
-      msg += 'Invalid filetype';
-      break;
-
-    default:
-      msg += 'Unknown Error';
-      break;
-  };
-alert(msg);
- console.log(msg);
-} 
 
 //统计字数
 function wordnum(){
@@ -193,7 +165,7 @@ function send_email(){
 }
 
 //创建标题
-function create_file_title(title){
+function create_file_title(title, content){
 	var titlenum = $("#title_list").find("li").length;
 	titlenum++;
 	var newtitle = '<li id="list_$" num="$"><input type="text" id="txtname_$" value=""/><a title="编辑" href="javascript:void(0)" class="rename" onclick="edit_title(this)"></a></li>';	
@@ -242,6 +214,7 @@ function create_file_title(title){
     });
 	$("#edit_control").append(newedit);	
 	$("#edittext_" + titlenum).css("width",$("#edit_area").width() - 20);
+	$("#edittext_" + titlenum).val(content);
 	$("#txtid").val("#edittext_" + titlenum);
 }
 
