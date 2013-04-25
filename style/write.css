@@ -46,6 +46,10 @@ ol,ul {
 	margin:3px 0 0 0;
 	padding:0;
 }
+.logo span{
+	color:#DBD8CE;
+	font-size:12px;
+}
 .aboutcat{
 	color:#fff;
 	font-size:14px;
@@ -125,7 +129,7 @@ ol,ul {
 	position:absolute;
 	left:0;
 	top:0;
-	background:rgb(44, 52, 55);
+	background:#161A1B;
 }
 
 .edit_area_fs{
@@ -362,4 +366,19 @@ ol,ul {
 .sbox_foot a:hover {
 	border-color:#F00;
 	font-size:18px;
+}
+
+.show_msg{
+	border: 1px dashed rgb(28, 36, 38);
+	line-height: 24px;
+	font-size: 12px;
+	text-align: center;
+	padding: 0 5px;
+	line-height: 26px;
+	cursor: pointer;
+	float: left;
+	margin: 0 5px 0 0;
+	color:#0F3;
+	display:none;
+	width:80px;
 }

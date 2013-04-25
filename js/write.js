@@ -1,16 +1,23 @@
 // JavaScript Document
-window.onbeforeunload = function()
-{
-       return ('离开页面可能造成数据的丢失！');
-}
+var isChrome = true;
+
 $(document).ready(function(e) {
 	//判断浏览器
 	if(navigator.userAgent.toLowerCase().indexOf("chrome") <= 0){
-		alert("本系统只支持Chrome浏览器");
-		window.location = "http://catcoder.com";
-		return false;
+		if(confirm("你使用的是非Chrome浏览器，无法使用本机保存功能。请注意备份！\r\n\n强烈建议你使用Chrome浏览器，可在Google中搜索Chrome！\r\n\n点击确定将跳转至Chrome页面，点击取消直接关闭。")){
+			window.location = "http://www.google.com/chrome/";
+		}
+		isChrome = false;
 	}
+	
+	window.onbeforeunload = function()
+	{
+		   return ('离开页面可能造成数据的丢失！');
+	}
+	
     change_left_list_height();
+	
+	//显示隐藏左侧列表
 	$("#oneline").click(function(){
 		change_left_show();
 	});
@@ -38,10 +45,14 @@ $(document).ready(function(e) {
 		hide_edit(this);
 	});
 	
-	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; //文件系统请求标识
-	window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL;
-	
-	loadfiles();
+	if(isChrome){
+		window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem; //文件系统请求标识
+		window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL;
+		
+		loadfiles();
+	}else{
+		create_file_title("默认文件","");
+	}
 });
 
 $(window).resize(function(){
@@ -237,4 +248,11 @@ function edit_title(ele){
 
 function aboutcat(){
 	$(this).aboutcat();
+}
+
+function show_msg(msg, col){
+	$("#show_msg").text(msg).css("color", col);
+	
+	$("#show_msg").show(1000);
+	$("#show_msg").hide(1000);
 }

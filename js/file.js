@@ -64,10 +64,12 @@ function saveas(){
 			fn.createWriter(function(fileWriter){
 				fileWriter.onwriteend = function(e){
 					console.log("写入文件完毕");
+					show_msg("保存成功！", "#0F3");
 				};
 				
 				fileWriter.onerror = function(e){
 					console.log("wirte failed:" + e);
+					show_msg("保存失败！", "red");
 				};
 				
 				var content = [$($("#txtid").val()).val()];
@@ -132,4 +134,24 @@ function removeFile(name){
 	},function(e){
 		console.log("error", e);
 	});
+}
+
+//导出文件到本地
+function lead_out(){
+	var filename = getSelectTitle() + ".txt";
+	var URL = URL || webkitURL || window;
+		
+	var content = [$($("#txtid").val()).val()];
+	var bb = new Blob(content, {"type" : 'text/plain'});
+		
+	var url = URL.createObjectURL(bb);
+	var savelink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+	savelink.href = url;
+	savelink.download = filename;
+	var event = document.createEvent('MouseEvents');
+	event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+	savelink.dispatchEvent(event);
+		
+	console.log(savelink);
+	URL.revokeObjectURL(url);
 }
