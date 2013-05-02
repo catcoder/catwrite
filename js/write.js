@@ -25,7 +25,9 @@ $(document).ready(function(e) {
 	$(document).keydown(function(event){
 		dokey(event);
 	});
-	
+	$(document).keypress(function(event){
+		dokey_press(event);
+	});
 	$("#sendto").mouseover(function(){
 		$("#sendto ul").css({
 			"left":$("#sendto").position().left,
@@ -114,6 +116,11 @@ function fullscreen(){
 //按键事件
 function dokey(event){
 	event = event ? event : ((window.event) ? window.event : "");
+	var src = event.srcElement || event.target;
+	
+	var src_id = src.getAttribute("id");
+	
+	
 	if(event.keyCode == 27){
 		fullscreen();
 	}else if(event.keyCode == 116){
@@ -140,6 +147,22 @@ function dokey(event){
 	}else if(event.keyCode == 121){  //F10快速排序
 		fast_typesetting();
 	}	
+}
+//按键后事件
+function dokey_press(event){
+	event = event ? event : ((window.event) ? window.event : "");
+	var src = event.srcElement || event.target;
+	
+	var src_id = src.getAttribute("id");
+	if(src_id.indexOf("txtname_") == 0 && event.keyCode == 13){
+		$("#" + src_id).attr("disabled", "disabled");
+		$($("#txtid").val()).focus();
+		var obj = document.getElementById($("#txtid").val().substr(1));
+		
+		obj.scrollTop = obj.scrollHeight;
+		obj.selectionStart = obj.value.length;
+		return false;
+	}
 }
 function sendto_sub(){
 	return false;
