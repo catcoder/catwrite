@@ -297,7 +297,7 @@ function del_title(){
 	var id = $("#" + $("#fouce_left_title_id").val());
 	remove_File(id.find("input").first().val());
 	id.hide(500,function(){
-		$("#txtid").hide(500,function(){
+		$($("#txtid").val()).hide(500,function(){
 			this.remove()
 		});
 		if(id.next().length > 0){
