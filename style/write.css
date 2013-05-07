@@ -382,3 +382,33 @@ ol,ul {
 	display:none;
 	width:80px;
 }
+
+.left_title_menu{
+	width:220px;
+	border: 1px solid rgb(34, 39, 42);
+	background-color: rgb(61, 69, 72);
+	-webkit-box-shadow: 3px 3px 6px rgb(34, 39, 42);
+	-moz-box-shadow: 3px 3px 6px rgb(34, 39, 42);
+	z-index: 999;
+	border-bottom: none;
+	position: absolute;
+	left: 211px;
+	line-height: 26px;
+	font-size: 14px;
+	width: 120px;
+	top:200px;
+	display:none;
+}
+
+.left_title_menu ul{
+	border-bottom: 1px solid rgb(34, 39, 42);
+	padding: 6px 0;
+	color: #FFF;
+}
+.left_title_menu ul li{
+	padding-left:10px;
+	cursor:pointer;
+}
+.left_title_menu ul li:hover{
+	background-color: #333;
+}

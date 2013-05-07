@@ -12,6 +12,7 @@ function loadfiles(){
 			}else{
 				console.log("Used quota: " + used + ", remaining quota: " + remaining);
 				var url = "filesystem:http://" + window.location.host + "/persistent/catwrite_documents/";
+				
 				window.resolveLocalFileSystemURL(url,function(fileEntry){					
 					console.log(fileEntry);
 					var dirReader = fileEntry.createReader();
@@ -47,7 +48,6 @@ function  getFileContentByName(fe,name){
 			
 			reader.onloadend = function(e){
 				name = name.substring(0, name.lastIndexOf("."));
-				console.log("nameStr", name);
 				create_file_title(name, this.result);
 			};
 			
@@ -124,16 +124,16 @@ function getSelectTitle(){
 }
 
 //删除文件
-function removeFile(name){
-	var url = "filesystem:http://" + window.location.host + "/persistent/catwrite_documents/" + name;
+function remove_File(name){
+	console.log(name);
+	var url = "filesystem:http://" + window.location.host + "/persistent/catwrite_documents/" + name + ".txt";
 	window.resolveLocalFileSystemURL(url,function(fileEntry){					
 		console.log("获得文件", fileEntry);
 		fileEntry.remove(function(){
 			console.log("删除文件", name);
+			return 1;
 		},errorHandler);
-	},function(e){
-		console.log("error", e);
-	});
+	},errorHandler);
 }
 
 //导出文件到本地

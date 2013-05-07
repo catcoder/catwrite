@@ -1,5 +1,6 @@
 // JavaScript Document
 var isChrome = true;
+var isIntoLeftMenu = false;
 
 $(document).ready(function(e) {
 	//判断浏览器
@@ -55,6 +56,17 @@ $(document).ready(function(e) {
 	}else{
 		create_file_title("默认文件","");
 	}
+	
+	//左侧标题菜单事件
+	$("#left_title_menu").mouseover(function(){
+		isIntoLeftMenu = true;
+	});
+	
+	$("#left_title_menu").mouseleave(function(){
+		if(isIntoLeftMenu){
+			$("#left_title_menu").hide();
+		}
+	});
 });
 
 $(window).resize(function(){
@@ -202,7 +214,7 @@ function send_email(){
 function create_file_title(title, content){
 	var titlenum = $("#title_list").find("li").length;
 	titlenum++;
-	var newtitle = '<li id="list_$" num="$"><input type="text" id="txtname_$" value=""/><a title="编辑" href="javascript:void(0)" class="rename" onclick="edit_title(this)"></a></li>';	
+	var newtitle = '<li id="list_$" num="$"><input type="text" id="txtname_$" value=""/><a title="编辑" href="javascript:void(0)" class="rename" onclick="show_left_menu(this)"></a></li>';	
 	
 	newtitle = newtitle.replace(/[$]/g, titlenum);
 	$("#title_list").append(newtitle);	
@@ -221,18 +233,7 @@ function create_file_title(title, content){
 	
 	//点击标题切换高亮和编辑区域
 	newlist.click(function(e) {
-		$("#title_list input").each(function(index) {
-            $(this).css("border-color","#333");			
-        });		
-		
-		$("#edit_control").find("textarea").each(function(index, element) {
-			$(this).css("display", "none");
-		});	
-		
-        $(this).find("input").css("border-color","#C60");
-		
-		$("#edittext_" + $(this).attr("num")).css("display", "block");
-		$("#txtid").val("#edittext_" + $(this).attr("num"));
+		top_title(this);
     });
 	
 	if(title != ""){
@@ -252,6 +253,24 @@ function create_file_title(title, content){
 	$("#txtid").val("#edittext_" + titlenum);
 }
 
+//标题高亮
+function top_title(ele){
+	$("#title_list input").each(function(index) {
+            $(this).css("border-color","#333");			
+        });		
+		
+		$("#edit_control").find("textarea").each(function(index, element) {
+			$(this).css("display", "none");
+		});	
+		
+        $(ele).find("input").css("border-color","#C60");
+		
+		$("#edittext_" + $(ele).attr("num")).css("display", "block");
+		$("#txtid").val("#edittext_" + $(ele).attr("num"));
+		wordnum();
+}
+
+//鼠标停留在标题上时出现编辑图标
 function show_edit(ele){
 	if($(ele).find("input").attr("disabled") == "disabled"){
 		$(ele).find("a").css("display","block");
@@ -259,14 +278,40 @@ function show_edit(ele){
 	}
 }
 
+//鼠标离开在标题时隐藏编辑图标
 function hide_edit(ele){
 	$(ele).find("a").css("display","none");
 	$(ele).css("cursor","pointer");
 }
 //编辑标题
-function edit_title(ele){
-	$(ele).prev().attr("disabled",false).focus();
-	hide_edit($(ele).parent());
+function edit_title(){
+	var ele = $("#" + $("#fouce_left_title_id").val());
+	ele.find("input").eq(0).attr("disabled",false).focus();
+	//$(ele).prev().attr("disabled",false).focus();
+	hide_edit(ele.find("a").eq(0));
+	$("#left_title_menu").hide();
+}
+
+//删除文件
+function del_title(){
+	var id = $("#" + $("#fouce_left_title_id").val());
+	remove_File(id.find("input").first().val());
+	id.hide(500,function(){
+		$("#txtid").hide(500,function(){
+			this.remove()
+		});
+		if(id.next().length > 0){
+			top_title(id.next());
+		}else if(id.prev().length > 0){
+			top_title(id.prev());
+		}else{
+			create_file_title("默认文件", "");
+		}
+		id.remove();		
+		
+		
+	});
+	$("#left_title_menu").hide();
 }
 
 function aboutcat(){
@@ -278,4 +323,13 @@ function show_msg(msg, col){
 	
 	$("#show_msg").show(1000);
 	$("#show_msg").hide(1000);
+}
+
+//显示左侧标题菜单
+function show_left_menu(ele){
+	$("#left_title_menu").css({
+		"display":"block",
+		"top":$(ele).offset().top
+	});
+	$("#fouce_left_title_id").val($(ele).parent().attr("id"));
 }
